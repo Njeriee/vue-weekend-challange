@@ -5,27 +5,37 @@
         <form action="">
           <div>
             <label for="fname">First name:</label><br />
-            <input class="border-b border-violet-700 py-2" type="text" />
+            <input class="border-b border-green-200 py-2" type="text"  v-model="form.fname"/>
           </div>
           <div>
             <label for="lname">Last name:</label><br />
-            <input class="border-b active:border-b active:border-red-600 border-violet-700 py-2" type="text" />
+            <input
+              class="border-b active:border-b border-green-200 py-2"
+              type="text" v-model="form.lname"/>
           </div>
           <div>
             <label for="email">email:</label><br />
-            <input class="border-b border-violet-700 py-2" type="email" />
+            <input class="border-b border-green-200 py-2" type="email" v-model="form.email" />
           </div>
           <div>
             <label for="phoneNo">Phone Number:</label><br />
-            <input class="border-b border-violet-700 py-2" type="text" />
+            <input class="border-b border-green-200 py-2" type="text" v-model="form.phoneNo" />
           </div>
           <div class="pt-10">
             <label for="terms">Accept terms and conditions</label><br />
-            <input class="" type="checkbox" />
+            <input class="" type="checkbox" v-model="form.check" />
           </div>
         </form>
         <div class="flex flex-row justify-center py-10">
-          <input class="bg-violet-700 text-white px-5 py-2 rounded-full" type="button" value="Submit" @click="closeInputModal" />
+          <button
+            class="bg-green-200 text-blue-900 px-5 py-2 rounded-full"
+            type="button"
+            value="Submit"
+            @click="Form"
+          > 
+          {{action === 'save'?'Save User':'Update User'}}
+          </button>
+          <button class="bg-green-200 text-blue-900 px-5 py-2 rounded-full mx-4" @click="closeInputModal">Cancel</button>
         </div>
       </div>
     </div>
@@ -34,12 +44,40 @@
 
 <script>
 export default {
-    methods:{
-        closeInputModal(){
-            this.$emit('close')
-        }
+  props:[
+    'user'
+  ],
+  mounted(){
+    if(this.user){
+      this.form = this.user
+      this.action = 'update'
     }
-}
+  },
+  data(){
+    return {
+      form : {},
+      action:'save'
+    }
+  },
+  methods: {
+    closeInputModal() {
+      this.$emit("close");
+      this.form = {}
+      this.action = 'save'
+    },
+    Form(){
+      if(this.action === 'save') {
+        this.$store.commit('addUser', this.form)
+      this.closeInputModal()
+      }
+      else{
+        this.$store.commit('updateUser', this.form)
+        this.closeInputModal()
+      }
+      // console.log(this.form)
+    }
+  },
+};
 </script>
 
 <style>
